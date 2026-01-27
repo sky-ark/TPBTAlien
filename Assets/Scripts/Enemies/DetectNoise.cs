@@ -2,15 +2,13 @@
 {
     public class DetectNoise : NodeLeaf
     {
-        private Blackboard _blackboard;
-        
-        public DetectNoise(Blackboard blackboard)
+        public DetectNoise(EnemyAI enemyAI) : base(enemyAI)
         {
-            _blackboard = blackboard;
         }
+
         public override NodeState Execute()
         {
-            return _blackboard.HasHeardNoise ? NodeState.SUCCESS : NodeState.FAILURE;
+            return EnemyAI.Blackboard.HasHeardNoise ? NodeState.SUCCESS : NodeState.FAILURE;
         }
     }
 }

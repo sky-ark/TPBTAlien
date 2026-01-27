@@ -259,7 +259,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 50
+  m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -296,7 +296,7 @@ MonoBehaviour:
   _attackDamage: 10
   _visionRange: 10
   _visionAngle: 120
-  _attackRange: 2
+  _attackRange: 1
 --- !u!4 &136313681
 Transform:
   m_ObjectHideFlags: 0

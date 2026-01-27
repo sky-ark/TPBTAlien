@@ -25,6 +25,11 @@ public class Health : MonoBehaviour
     private void Die()
     { 
         Debug.Log("Player has died");
+        // Notify all enemy sensors to lose the player
+        EnemySensor[] sensors = FindObjectsOfType<EnemySensor>();
+        foreach (var sensor in sensors)
+            sensor.ForceLosePlayer();
+        
         Respawn();
     }
     

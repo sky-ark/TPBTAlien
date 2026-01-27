@@ -1,19 +1,20 @@
 using System;
-using UnityEngine;
 
-public class NodeCondition :NodeDecorator
+public class NodeCondition : NodeDecorator
 {
     private Func<bool> _condition;
-    public NodeCondition(NodeBase child, Func<bool> condition) : base(child)
+
+    public NodeCondition(EnemyAI enemyAI, Func<bool> condition) : base(enemyAI)
     {
         _condition = condition;
     }
+
     public override NodeState Execute()
     {
         if (!_condition())
         {
             return NodeState.FAILURE;
         }
-        return Child.Execute();
+        return Child.ExecuteAndDebug();
     }
 }

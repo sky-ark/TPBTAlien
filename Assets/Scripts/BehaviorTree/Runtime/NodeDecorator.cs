@@ -1,11 +1,11 @@
+using BehaviorTree.Runtime;
 using UnityEngine;
 
 public abstract class NodeDecorator : NodeBase
 {
-    protected NodeBase Child;
+    public NodeBase Child;
 
-    public NodeDecorator(NodeBase child)
+    protected NodeDecorator(EnemyAI enemyAI) : base(enemyAI)
     {
-        Child = child;
     }
 }

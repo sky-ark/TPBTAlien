@@ -2,24 +2,23 @@
 
 public class CooldownDecorator : NodeDecorator
 {
-        private float _cooldownTime;
-        private float _lastExecutionTime;
+    private float _lastExecutionTime = -Mathf.Infinity;
+    public CooldownDecorator(EnemyAI enemyAI) : base(enemyAI)
+    {
+    }
 
-        public CooldownDecorator(NodeBase child, float cooldownTime) : base(child)
+    public override NodeState Execute()
         {
-            _cooldownTime = cooldownTime;
-            _lastExecutionTime = -cooldownTime; // Ensure it can run immediately
-        }
-
-        public override NodeState Execute()
-        {
-            if (Time.time - _lastExecutionTime < _cooldownTime)
+            if (Time.time - _lastExecutionTime < EnemyAI.AttackCooldownTime) {
+                Debug.Log("CooldownDecorator: On cooldown, skipping execution.");
                 return NodeState.RUNNING;
+            }
             
-            NodeState result = Child.Execute();
+            NodeState result = Child.ExecuteAndDebug();
             if (result == NodeState.SUCCESS || result == NodeState.RUNNING)
             {
                 _lastExecutionTime = Time.time;
+                Debug.Log("CooldownDecorator: Action executed, starting cooldown.");
             }
             return result;
         }

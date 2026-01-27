@@ -8,7 +8,6 @@ public class EnemyAI : MonoBehaviour
     private EnemySensor _sensor;
     private Blackboard _blackboard;
     
-    
     [SerializeField] private float _chaseSpeed = 5f;
     [SerializeField] private float _patrolSpeed = 3f;
     [SerializeField] private Transform[] _patrolPoints;
@@ -16,10 +15,27 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private int _attackDamage = 10;
     [SerializeField] private float _visionRange = 10f;
     [SerializeField] private float _visionAngle = 120f;
-
+    [SerializeField] private float _attackRange = 2f;
+    [SerializeField] private float _reachDistance = 0.5f;
+    [SerializeField] private int _pointsToResearch = 3;
+    [SerializeField] private float _researchRadius = 3f;
+    
     private NavMeshAgent _agent;
+    public float ChaseSpeed => _chaseSpeed;
+    public float PatrolSpeed => _patrolSpeed;
+    public Transform[] PatrolPoints => _patrolPoints;
+    public float AttackCooldownTime => _attackCooldownTime;
+    public int AttackDamage => _attackDamage;
+    public float VisionRange => _visionRange;
+    public float VisionAngle => _visionAngle;
+    public float AttackRange => _attackRange;
+    public float ReachDistance => _reachDistance;
+    public int PointsToResearch => _pointsToResearch;
+    public float ResearchRadius => _researchRadius;
+    public Blackboard Blackboard => _blackboard;
+    public NavMeshAgent Agent => _agent;
 
-private void Start()
+    private void Start()
 {
         // Get NavMeshAgent and set patrol speed
         _agent = GetComponent<NavMeshAgent>();
@@ -36,44 +52,46 @@ private void Start()
         hearing.Blackboard = _blackboard;
         
         // Add node root and selector
-        _root = new NodeRoot();
-        NodeSelector selector = new NodeSelector();
+        _root = new NodeRoot(this);
+        NodeSelector selector = new NodeSelector(this);
         _root.Child = selector;
 
-      // Chase and attack sequence
-        NodeSequence a = new NodeSequence();
+        // Chase and attack sequence
+        NodeSequence a = new NodeSequence(this);
         selector.Children.Add(a);
-        NodeLeaf aa = new IsPlayerVisible(_blackboard);
-        NodeLeaf ab = new Chase(transform, _agent, _blackboard, 1f);
-        NodeDecorator ac = new CooldownDecorator(new Attack(transform, _blackboard, _attackDamage), _attackCooldownTime);
+        NodeLeaf aa = new IsPlayerVisible(this);
+        NodeLeaf ab = new Chase(this);
+        NodeDecorator ac = new CooldownDecorator(this);
+        NodeLeaf aca = new Attack(this);
+        ac.Child = aca;
         a.Children.Add(aa);
         a.Children.Add(ab);
         a.Children.Add(ac);
-       
+        
         // Investigate noise et research sequence
-        NodeSequence b = new NodeSequence();
+        NodeSequence b = new NodeSequence(this);
         selector.Children.Add(b);
-        NodeLeaf ba = new DetectNoise(_blackboard);
-        NodeLeaf bb = new InvestigateNoise(_agent, _blackboard, 0.5f);
-        NodeLeaf bc = new ResearchArea(_agent, _blackboard, 5f, 3);
+        NodeLeaf ba = new DetectNoise(this);
+        NodeLeaf bb = new InvestigateNoise(this);
+        NodeLeaf bc = new ResearchArea(this);
         b.Children.Add(ba);
         b.Children.Add(bb);
         b.Children.Add(bc);
 
         // Follow footsteps sequence
-        NodeSequence c = new NodeSequence();
+        NodeSequence c = new NodeSequence(this);
         selector.Children.Add(c);
-        NodeLeaf ca = new DetectFootsteps(transform, _blackboard, _visionRange, _visionAngle );
-        NodeLeaf cb = new FollowFootsteps(_agent, _blackboard, 0.5f);
+        NodeLeaf ca = new DetectFootsteps(this);
+        NodeLeaf cb = new FollowFootsteps(this);
         c.Children.Add(ca);
         c.Children.Add(cb);
         
-        NodeLeaf d = new Patrol(transform, _agent, _patrolPoints, 0.2f);
+        NodeLeaf d = new Patrol(this);
         selector.Children.Add(d);
     }
 
     private void Update()
     {
-        _root.Execute();
+        _root.ExecuteAndDebug();
     }
 }

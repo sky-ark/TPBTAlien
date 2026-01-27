@@ -3,26 +3,20 @@ using UnityEngine.AI;
 
 public class FollowFootsteps : NodeLeaf
 {
-    private NavMeshAgent _agent;
-    private Blackboard _blackboard;
-    private float _reachDistance;
-    
-    public FollowFootsteps(NavMeshAgent agent, Blackboard blackboard, float reachDistance)
+    public FollowFootsteps(EnemyAI enemyAI) : base(enemyAI)
     {
-        _agent = agent;
-        _blackboard = blackboard;
-        _reachDistance = reachDistance;
     }
+
     public override NodeState Execute()
     {
-        if (_blackboard.TargetFootstep == null) return NodeState.FAILURE;
+        if (EnemyAI.Blackboard.TargetFootstep == null) return NodeState.FAILURE;
 
-        _agent.SetDestination(_blackboard.TargetFootstep.position);
+        EnemyAI.Agent.SetDestination(EnemyAI.Blackboard.TargetFootstep.position);
 
-        float dist = Vector3.Distance(_agent.transform.position, _blackboard.TargetFootstep.position);
-        if (dist <= _reachDistance)
+        float dist = Vector3.Distance(EnemyAI.Agent.transform.position, EnemyAI.Blackboard.TargetFootstep.position);
+        if (dist <= EnemyAI.ReachDistance)
         {
-            _blackboard.TargetFootstep = null;
+            EnemyAI.Blackboard.TargetFootstep = null;
             return NodeState.SUCCESS;
         }
 

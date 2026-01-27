@@ -7,28 +7,21 @@ namespace Enemies
 {
     public class ResearchArea : NodeLeaf 
     {
-        private NavMeshAgent _agent;
-        private Blackboard _blackboard;
-        private float _radius;
-        private int _pointsToResearch;
         
         private Queue<Vector3> _waypoints = new Queue<Vector3>();
         private Vector3 _currentTarget;
 
-        public ResearchArea(NavMeshAgent agent, Blackboard blackboard, float radius, int pointsToResearch)
+
+        public ResearchArea(EnemyAI enemyAI) : base(enemyAI)
         {
-            _agent = agent;
-            _blackboard = blackboard;
-            _radius = radius;
-            _pointsToResearch = pointsToResearch;
         }
 
         private void GenerateWaypoints(Vector3 center)
         {
             _waypoints.Clear();
-            for (int i = 0; i < _pointsToResearch; i++)
+            for (int i = 0; i < EnemyAI.PointsToResearch; i++)
             {
-                Vector2 circle = Random.insideUnitCircle * _radius;
+                Vector2 circle = Random.insideUnitCircle * EnemyAI.ResearchRadius;
                 Vector3 point = center + new Vector3(circle.x, 0, circle.y);
 
                 if (NavMesh.SamplePosition(point, out NavMeshHit hit, 1f, NavMesh.AllAreas))
@@ -44,13 +37,13 @@ namespace Enemies
             if (_waypoints.Count == 0)
             {
                 Vector3 center;
-                if (_blackboard.HasHeardNoise)
+                if (EnemyAI.Blackboard.HasHeardNoise)
                 {
-                    center = _blackboard.LastHeardNoisePosition;
+                    center = EnemyAI.Blackboard.LastHeardNoisePosition;
                 }
-                else if (_blackboard.LastKnownPlayerPosition != Vector3.zero)
+                else if (EnemyAI.Blackboard.LastKnownPlayerPosition != Vector3.zero)
                 {
-                    center = _blackboard.LastKnownPlayerPosition;
+                    center = EnemyAI.Blackboard.LastKnownPlayerPosition;
                 }
                 
                 else
@@ -63,15 +56,15 @@ namespace Enemies
             if (_currentTarget == Vector3.zero)
             {
                 _currentTarget = _waypoints.Dequeue();
-                _agent.SetDestination(_currentTarget);
+                EnemyAI.Agent.SetDestination(_currentTarget);
             }
             
-            if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+            if (!EnemyAI.Agent.pathPending && EnemyAI.Agent.remainingDistance <= EnemyAI.Agent.stoppingDistance)
             {
                 if (_waypoints.Count > 0)
                 {
                     _currentTarget = _waypoints.Dequeue();
-                    _agent.SetDestination(_currentTarget);
+                    EnemyAI.Agent.SetDestination(_currentTarget);
                 }
                 else
                 {

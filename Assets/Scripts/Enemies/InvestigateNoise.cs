@@ -5,22 +5,16 @@ namespace Enemies
 {
     public class InvestigateNoise : NodeLeaf
     {
-        private NavMeshAgent _agent;
-        private Blackboard _blackboard;
-        private float _reachDistance;
-
-        public InvestigateNoise(NavMeshAgent agent, Blackboard blackboard, float reachDistance)
+        public InvestigateNoise(EnemyAI enemyAI) : base(enemyAI)
         {
-            _agent = agent;
-            _blackboard = blackboard;
-            _reachDistance = reachDistance;
         }
+
         public override NodeState Execute()
         {
-            _agent.SetDestination(_blackboard.LastHeardNoisePosition);
-            if(Vector3.Distance(_agent.transform.position , _blackboard.LastHeardNoisePosition) <= _reachDistance)
+            EnemyAI.Agent.SetDestination(EnemyAI.Blackboard.LastHeardNoisePosition);
+            if(Vector3.Distance(EnemyAI.Agent.transform.position , EnemyAI.Blackboard.LastHeardNoisePosition) <= EnemyAI.ReachDistance)
             {
-                _blackboard.HasHeardNoise = false;
+                EnemyAI.Blackboard.HasHeardNoise = false;
                 return NodeState.SUCCESS;
             }
             return NodeState.RUNNING;

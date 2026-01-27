@@ -8,8 +8,11 @@ public class EnemySensor : MonoBehaviour
     [SerializeField] private float _visionDistance = 10f;
     [SerializeField] private float _visionAngle = 120f;
     [SerializeField] private LayerMask _obstacleMask;
+    [SerializeField] private float _memoryStale = 2f;
+
     
     private Transform _player;
+    private float _timer;
 
     private void Start()
     {
@@ -30,26 +33,34 @@ public class EnemySensor : MonoBehaviour
         // Distance check
         if (distance > _visionDistance)
         {
-            LosePlayer();
-            return; 
+            LoseSightTick();
+            return;
         }
         // Angle check
         float angle = Vector3.Angle(transform.forward, dirToPlayer.normalized);
         if (angle > _visionAngle / 2f)
         {
-            LosePlayer();
-            return; 
+            LoseSightTick();
+            return;
         }
         // Obstacle check
         Vector3 origin = transform.position + Vector3.up * 1.5f; // Eye height
         if (Physics.Raycast(origin, dirToPlayer.normalized, distance, _obstacleMask))
         {
-            LosePlayer();
+            LoseSightTick();
             return;
         }
-
+        
+        
         SeePlayer();
+        _timer = 0;
+    }
 
+    private void LoseSightTick()
+    {
+        _timer += Time.deltaTime;
+        if (_timer >= _memoryStale)
+            LosePlayer();
     }
 
     private void SeePlayer()
@@ -64,5 +75,11 @@ public class EnemySensor : MonoBehaviour
     {
         Blackboard.Target = null;
         Blackboard.IsPlayerVisible = false;
+    }
+
+    public void ForceLosePlayer()
+    {
+        _timer = _memoryStale;
+        LosePlayer();
     }
 }

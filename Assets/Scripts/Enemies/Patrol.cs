@@ -3,35 +3,28 @@ using UnityEngine.AI;
 
 public class Patrol : NodeLeaf
 {
-    private Transform _self;
-    private Transform[] _waypoints;
-    private NavMeshAgent _agent;
-    private float _speed;
-    private float _stopDistance;
-    private int _currentIndex;
+    
+    private int _currentIndex = 0;
     private bool _destinationSet;
-    
-    public Patrol(Transform self, NavMeshAgent agent, Transform[] waypoints, float stopDistance = 0.2f)
+
+
+    public Patrol(EnemyAI enemyAI) : base(enemyAI)
     {
-        _self = self;
-        _agent = agent;
-        _waypoints = waypoints;
-        _stopDistance = stopDistance;
-        _currentIndex = 0;
     }
-    
+
     public override NodeState Execute()
     {
-        if (_waypoints == null || _waypoints.Length == 0)
+        EnemyAI.Agent.isStopped = false;
+        if (EnemyAI.PatrolPoints == null || EnemyAI.PatrolPoints.Length == 0)
             return NodeState.FAILURE;
         
-        _agent.SetDestination(_waypoints[_currentIndex].position);
+        EnemyAI.Agent.SetDestination(EnemyAI.PatrolPoints[_currentIndex].position);
         
         // Check if reached the waypoint
-        if (_agent.remainingDistance <= _stopDistance)
+        if (EnemyAI.Agent.remainingDistance <= EnemyAI.ReachDistance)
         {
             _currentIndex++;
-            if(_currentIndex >= _waypoints.Length)
+            if(_currentIndex >= EnemyAI.PatrolPoints.Length)
                 _currentIndex = 0;
         }
         return NodeState.RUNNING;

@@ -1,25 +1,21 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Enemies
 {
     public class Attack : NodeLeaf
     {
-        private Transform _self;
-        private Blackboard _blackboard;
-        private int _damage;
-    
-        public Attack(Transform self, Blackboard blackboard, int damage)
-        {
-            _self = self;
-            _blackboard = blackboard;
-            _damage = damage;
-        }
+        
+        public Attack(EnemyAI enemyAI) : base(enemyAI) { }
+
         public override NodeState Execute()
         {
             Debug.Log("Attack!");
-            Health health = _blackboard.Target.GetComponent<Health>();
+            Health health = EnemyAI.Blackboard.Target.GetComponent<Health>();
             if (health == null) return NodeState.FAILURE;
-            health.TakeDamage(_damage);
+            health.TakeDamage(EnemyAI.AttackDamage);
+            EnemyAI.transform.LookAt(EnemyAI.Blackboard.Target);
+            
             return NodeState.SUCCESS;
         }
     }

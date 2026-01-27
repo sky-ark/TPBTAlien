@@ -2,18 +2,10 @@ using UnityEngine;
 
 public class DetectFootsteps : NodeLeaf
 {
-    private Transform _self;
-    private Blackboard _blackboard;
-    private float _viewDistance;
-    private float _viewAngle;
-
-    public DetectFootsteps(Transform self, Blackboard blackboard, float viewDistance = 10f, float viewAngle = 120f)
+    public DetectFootsteps(EnemyAI enemyAI) : base(enemyAI)
     {
-        _self = self;
-        _blackboard = blackboard;
-        _viewDistance = viewDistance;
-        _viewAngle = viewAngle;
     }
+
     public override NodeState Execute()
     {
         Footstep[] allSteps = GameObject.FindObjectsByType<Footstep>(FindObjectsSortMode.None);
@@ -23,13 +15,13 @@ public class DetectFootsteps : NodeLeaf
 
         foreach (var step in allSteps)
         {
-            Vector3 dir = step.transform.position - _self.position;
+            Vector3 dir = step.transform.position - EnemyAI.transform.position;
             float dist = dir.magnitude;
-            if (dist > _viewDistance)
+            if (dist > EnemyAI.VisionRange)
                 continue;
 
-            float angle = Vector3.Angle(_self.forward, dir);
-            if (angle > _viewAngle / 2)
+            float angle = Vector3.Angle(EnemyAI.transform.forward, dir);
+            if (angle > EnemyAI.VisionAngle / 2)
                 continue;
 
             if (dist < minDist)
@@ -39,7 +31,7 @@ public class DetectFootsteps : NodeLeaf
             }
         }
         
-        _blackboard.TargetFootstep = closest != null ? closest.transform : null;
+        EnemyAI.Blackboard.TargetFootstep = closest != null ? closest.transform : null;
         return closest != null ? NodeState.SUCCESS : NodeState.FAILURE;
     }
 }
