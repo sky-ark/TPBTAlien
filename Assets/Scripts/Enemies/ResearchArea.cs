@@ -7,18 +7,13 @@ namespace Enemies
 {
     public class ResearchArea : NodeLeaf 
     {
-        
-        private Queue<Vector3> _waypoints = new Queue<Vector3>();
-        private Vector3 _currentTarget;
-
-
         public ResearchArea(EnemyAI enemyAI) : base(enemyAI)
         {
         }
 
         private void GenerateWaypoints(Vector3 center)
         {
-            _waypoints.Clear();
+            EnemyAI.Blackboard.ResearchWaypoints.Clear(); // clear previous waypoints
             for (int i = 0; i < EnemyAI.PointsToResearch; i++)
             {
                 Vector2 circle = Random.insideUnitCircle * EnemyAI.ResearchRadius;
@@ -26,7 +21,7 @@ namespace Enemies
 
                 if (NavMesh.SamplePosition(point, out NavMeshHit hit, 1f, NavMesh.AllAreas))
                 {
-                    _waypoints.Enqueue(hit.position);
+                    EnemyAI.Blackboard.ResearchWaypoints.Enqueue(hit.position);
                 }
             }
             
@@ -34,10 +29,10 @@ namespace Enemies
         }
         public override NodeState Execute()
         {
-            if (_waypoints.Count == 0)
+            if (EnemyAI.Blackboard.ResearchWaypoints.Count == 0)
             {
                 Vector3 center;
-                if (EnemyAI.Blackboard.HasHeardNoise)
+                if (EnemyAI.Blackboard.LastHeardNoisePosition != Vector3.zero)
                 {
                     center = EnemyAI.Blackboard.LastHeardNoisePosition;
                 }
@@ -52,23 +47,30 @@ namespace Enemies
                 }
                 GenerateWaypoints(center);
             }
-
-            if (_currentTarget == Vector3.zero)
+            
+            //If no current target, dequeue the next waypoint
+            if (!EnemyAI.Blackboard.HasResearchTarget)
             {
-                _currentTarget = _waypoints.Dequeue();
-                EnemyAI.Agent.SetDestination(_currentTarget);
+                EnemyAI.Blackboard.ResearchCurrentTarget = EnemyAI.Blackboard.ResearchWaypoints.Dequeue();
+                Debug.Log("Set research position");
+                EnemyAI.Agent.SetDestination(EnemyAI.Blackboard.ResearchCurrentTarget);
+                EnemyAI.Blackboard.HasResearchTarget = true;
             }
             
-            if (!EnemyAI.Agent.pathPending && EnemyAI.Agent.remainingDistance <= EnemyAI.Agent.stoppingDistance)
+            //
+            if (Vector3.Distance(EnemyAI.transform.position, EnemyAI.Blackboard.ResearchCurrentTarget) <= EnemyAI.ReachDistance)
             {
-                if (_waypoints.Count > 0)
+                if (EnemyAI.Blackboard.ResearchWaypoints.Count > 0)
                 {
-                    _currentTarget = _waypoints.Dequeue();
-                    EnemyAI.Agent.SetDestination(_currentTarget);
+                    EnemyAI.Blackboard.ResearchCurrentTarget = EnemyAI.Blackboard.ResearchWaypoints.Dequeue();
+                    Debug.Log($"Researching next point at {EnemyAI.Blackboard.ResearchCurrentTarget}");
+                    EnemyAI.Agent.SetDestination(EnemyAI.Blackboard.ResearchCurrentTarget);
                 }
                 else
                 {
-                    _currentTarget = Vector3.zero;
+                    EnemyAI.Blackboard.ResearchCurrentTarget = Vector3.zero;
+                    EnemyAI.Blackboard.HasResearchTarget = false;
+                    EnemyAI.Blackboard.HasHeardNoise = false;
                     return NodeState.SUCCESS;
                 }
             }

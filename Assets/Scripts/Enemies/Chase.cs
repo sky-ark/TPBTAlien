@@ -29,7 +29,7 @@ public class Chase : NodeLeaf
         EnemyAI.Agent.stoppingDistance = EnemyAI.AttackRange;
         
         EnemyAI.Agent.SetDestination(EnemyAI.Blackboard.Target.position);
-        if (!EnemyAI.Agent.pathPending && EnemyAI.Agent.remainingDistance <= EnemyAI.Agent.stoppingDistance)
+        if (EnemyAI.Agent.remainingDistance <= EnemyAI.ReachDistance)
         {
            // EnemyAI.Agent.isStopped = true;
             return NodeState.SUCCESS;

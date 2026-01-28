@@ -17,12 +17,12 @@ public class Patrol : NodeLeaf
         EnemyAI.Agent.isStopped = false;
         if (EnemyAI.PatrolPoints == null || EnemyAI.PatrolPoints.Length == 0)
             return NodeState.FAILURE;
-        
         EnemyAI.Agent.SetDestination(EnemyAI.PatrolPoints[_currentIndex].position);
         
         // Check if reached the waypoint
         if (EnemyAI.Agent.remainingDistance <= EnemyAI.ReachDistance)
         {
+            Debug.Log($"Reached checkpoint {_currentIndex}");
             _currentIndex++;
             if(_currentIndex >= EnemyAI.PatrolPoints.Length)
                 _currentIndex = 0;

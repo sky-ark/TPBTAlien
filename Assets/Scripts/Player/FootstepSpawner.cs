@@ -27,7 +27,12 @@ public class FootstepSpawner : MonoBehaviour
     {
         GameObject step = Instantiate(_footstepPrefab, transform.position, _footstepPrefab.transform.rotation);
         Vector3 forwardDir = transform.forward;
-        step.transform.rotation = Quaternion.LookRotation(forwardDir, Vector3.up);
+        
+        Quaternion baseRotation = _footstepPrefab.transform.rotation;
+        
+        Quaternion groundRotation = Quaternion.LookRotation(forwardDir, Vector3.up);
+        
+        step.transform.rotation = groundRotation * baseRotation;
         
         Footstep fs = step.GetComponent<Footstep>();
         if (fs != null)

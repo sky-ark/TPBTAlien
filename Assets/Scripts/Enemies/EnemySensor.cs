@@ -65,7 +65,6 @@ public class EnemySensor : MonoBehaviour
 
     private void SeePlayer()
     {
-        Debug.Log("see player");
         Blackboard.Target = _player;
         Blackboard.IsPlayerVisible = true;
         Blackboard.LastKnownPlayerPosition = _player.position;

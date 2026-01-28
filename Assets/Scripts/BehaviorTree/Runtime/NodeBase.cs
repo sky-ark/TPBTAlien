@@ -11,10 +11,8 @@ namespace BehaviorTree.Runtime
             EnemyAI = enemyAI;
         }
 
-        public NodeState ExecuteAndDebug() {
-            NodeState state = Execute();
-            Debug.Log($"{GetType().Name} returned {state}");
-            return state;
+        public virtual NodeState ExecuteAndDebug() {
+            return Execute();
         }
     
         public abstract NodeState Execute();

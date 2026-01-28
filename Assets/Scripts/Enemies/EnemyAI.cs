@@ -6,7 +6,7 @@ public class EnemyAI : MonoBehaviour
 {
     private NodeRoot _root;
     private EnemySensor _sensor;
-    private Blackboard _blackboard;
+    [SerializeField]  private Blackboard _blackboard;
     
     [SerializeField] private float _chaseSpeed = 5f;
     [SerializeField] private float _patrolSpeed = 3f;
@@ -59,6 +59,7 @@ public class EnemyAI : MonoBehaviour
         // Chase and attack sequence
         NodeSequence a = new NodeSequence(this);
         selector.Children.Add(a);
+        
         NodeLeaf aa = new IsPlayerVisible(this);
         NodeLeaf ab = new Chase(this);
         NodeDecorator ac = new CooldownDecorator(this);
@@ -68,26 +69,34 @@ public class EnemyAI : MonoBehaviour
         a.Children.Add(ab);
         a.Children.Add(ac);
         
-        // Investigate noise et research sequence
+        // Research Area sequence
         NodeSequence b = new NodeSequence(this);
         selector.Children.Add(b);
-        NodeLeaf ba = new DetectNoise(this);
-        NodeLeaf bb = new InvestigateNoise(this);
-        NodeLeaf bc = new ResearchArea(this);
+        NodeLeaf ba = new ResearchArea(this);
         b.Children.Add(ba);
-        b.Children.Add(bb);
-        b.Children.Add(bc);
-
-        // Follow footsteps sequence
+        
+        // Investigate noise et research sequence
         NodeSequence c = new NodeSequence(this);
         selector.Children.Add(c);
-        NodeLeaf ca = new DetectFootsteps(this);
-        NodeLeaf cb = new FollowFootsteps(this);
+        
+        NodeLeaf ca = new DetectNoise(this);
+        NodeLeaf cb = new InvestigateNoise(this);
+        NodeLeaf cc = new ResearchArea(this);
         c.Children.Add(ca);
         c.Children.Add(cb);
-        
-        NodeLeaf d = new Patrol(this);
+        c.Children.Add(cc);
+
+        // Follow footsteps sequence
+        NodeSequence d = new NodeSequence(this);
         selector.Children.Add(d);
+        
+        NodeLeaf da = new DetectFootsteps(this);
+        NodeLeaf db = new FollowFootsteps(this);
+        d.Children.Add(da);
+        d.Children.Add(db);
+        
+        NodeLeaf e = new Patrol(this);
+        selector.Children.Add(e);
     }
 
     private void Update()

@@ -15,6 +15,11 @@ public class DetectFootsteps : NodeLeaf
 
         foreach (var step in allSteps)
         {
+            //Check if footstep has been visited
+            if (EnemyAI.Blackboard.VisitedFootsteps.Contains(step.transform))
+                continue;
+            
+            //Check if footstep is within vision range and angle
             Vector3 dir = step.transform.position - EnemyAI.transform.position;
             float dist = dir.magnitude;
             if (dist > EnemyAI.VisionRange)
