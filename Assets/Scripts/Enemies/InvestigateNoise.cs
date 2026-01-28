@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Enemies
@@ -16,6 +17,7 @@ namespace Enemies
             //if(Vector3.Distance(EnemyAI.Agent.transform.position , EnemyAI.Blackboard.LastHeardNoisePosition) <= EnemyAI.ReachDistance)
             if (EnemyAI.Agent.remainingDistance <= EnemyAI.ReachDistance)
             {
+                EnemyAI.Blackboard.HasInvestigatedNoise = true;
                 return NodeState.SUCCESS;
             }
             return NodeState.RUNNING;

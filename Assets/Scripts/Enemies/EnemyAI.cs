@@ -72,8 +72,11 @@ public class EnemyAI : MonoBehaviour
         // Research Area sequence
         NodeSequence b = new NodeSequence(this);
         selector.Children.Add(b);
-        NodeLeaf ba = new ResearchArea(this);
+
+        NodeLeaf ba = new HasInvestigatedNoise(this);
+        NodeLeaf bb = new ResearchArea(this);
         b.Children.Add(ba);
+        b.Children.Add(bb);
         
         // Investigate noise et research sequence
         NodeSequence c = new NodeSequence(this);

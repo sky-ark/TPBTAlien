@@ -23,4 +23,5 @@ public class Blackboard
     //Noise
     public bool HasHeardNoise = false;
     public Vector3 LastHeardNoisePosition;
+    public bool HasInvestigatedNoise = false;
 }
