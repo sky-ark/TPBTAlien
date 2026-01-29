@@ -1,43 +1,43 @@
 using UnityEngine;
 
-public class FootstepSpawner : MonoBehaviour
+namespace Player
 {
-    [SerializeField] private GameObject _footstepPrefab;
-    [SerializeField] private float _stepDistance = 2f;
-    [SerializeField] private float _soundIntensity = 5f;
-
-    private Vector3 _lastStepPosition;
-    
-    private void Start()
+    public class FootstepSpawner : MonoBehaviour
     {
-        _lastStepPosition = transform.position;
-    }
+        [SerializeField] private GameObject _footstepPrefab;
+        [SerializeField] private float _stepDistance = 2f;
+        [SerializeField] private float _soundIntensity = 5f;
 
-    private void Update()
-    {
-        if (Vector3.Distance(transform.position, _lastStepPosition) >= _stepDistance)
+        private Vector3 _lastStepPosition;
+
+        private void Start()
         {
-            SpawnStep();
-            NoiseEvents.OnNoiseEmitted?.Invoke(transform.position, _soundIntensity);
             _lastStepPosition = transform.position;
         }
-    }
-    
-    private void SpawnStep()
-    {
-        GameObject step = Instantiate(_footstepPrefab, transform.position, _footstepPrefab.transform.rotation);
-        Vector3 forwardDir = transform.forward;
-        
-        Quaternion baseRotation = _footstepPrefab.transform.rotation;
-        
-        Quaternion groundRotation = Quaternion.LookRotation(forwardDir, Vector3.up);
-        
-        step.transform.rotation = groundRotation * baseRotation;
-        
-        Footstep fs = step.GetComponent<Footstep>();
-        if (fs != null)
+
+        private void Update()
         {
-            fs.Direction = forwardDir;
+            if (Vector3.Distance(transform.position, _lastStepPosition) >= _stepDistance)
+            {
+                SpawnStep();
+                NoiseEvents.OnNoiseEmitted?.Invoke(transform.position, _soundIntensity);
+                _lastStepPosition = transform.position;
+            }
+        }
+
+        private void SpawnStep()
+        {
+            var step = Instantiate(_footstepPrefab, transform.position, _footstepPrefab.transform.rotation);
+            var forwardDir = transform.forward;
+
+            var baseRotation = _footstepPrefab.transform.rotation;
+
+            var groundRotation = Quaternion.LookRotation(forwardDir, Vector3.up);
+
+            step.transform.rotation = groundRotation * baseRotation;
+
+            var fs = step.GetComponent<Footstep>();
+            if (fs != null) fs.Direction = forwardDir;
         }
     }
 }

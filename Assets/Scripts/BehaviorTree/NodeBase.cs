@@ -1,6 +1,6 @@
-using UnityEngine;
+using Enemies.Components;
 
-namespace BehaviorTree.Runtime
+namespace BehaviorTree
 {
     public abstract class NodeBase
     {
@@ -11,10 +11,11 @@ namespace BehaviorTree.Runtime
             EnemyAI = enemyAI;
         }
 
-        public virtual NodeState ExecuteAndDebug() {
+        public virtual NodeState ExecuteAndDebug()
+        {
             return Execute();
         }
-    
+
         public abstract NodeState Execute();
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public static class NoiseEvents
+namespace Player
 {
-    public static Action<Vector3, float> OnNoiseEmitted;
+    public static class NoiseEvents
+    {
+        public static Action<Vector3, float> OnNoiseEmitted;
+    }
 }

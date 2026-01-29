@@ -1,41 +1,41 @@
-using System;
+using Enemies.Components;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+namespace Player
 {
-    [SerializeField] private int _maxHealth = 100;
-    private int _currentHealth;
-    [SerializeField] private Transform _spawnPoint;
-
-    private void Awake()
+    public class Health : MonoBehaviour
     {
-        _currentHealth = _maxHealth;
-    }
+        [SerializeField] private int _maxHealth = 100;
+        [SerializeField] private Transform _spawnPoint;
+        private int _currentHealth;
 
-    public void TakeDamage(int damage)
-    {
-        _currentHealth -= damage;
-        
-        if (_currentHealth <= 0)
-        { 
-            Die();
+        private void Awake()
+        {
+            _currentHealth = _maxHealth;
         }
-    }
 
-    private void Die()
-    { 
-        Debug.Log("Player has died");
-        // Notify all enemy sensors to lose the player
-        EnemySensor[] sensors = FindObjectsOfType<EnemySensor>();
-        foreach (var sensor in sensors)
-            sensor.ForceLosePlayer();
-        
-        Respawn();
-    }
-    
-    private void Respawn()
-    {
-        _currentHealth = _maxHealth;
-        transform.position = _spawnPoint.position; 
+        public void TakeDamage(int damage)
+        {
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0) Die();
+        }
+
+        private void Die()
+        {
+            Debug.Log("Player has died");
+            // Notify all enemy sensors to lose the player
+            var sensors = FindObjectsOfType<EnemySensor>();
+            foreach (var sensor in sensors)
+                sensor.ForceLosePlayer();
+
+            Respawn();
+        }
+
+        private void Respawn()
+        {
+            _currentHealth = _maxHealth;
+            transform.position = _spawnPoint.position;
+        }
     }
 }

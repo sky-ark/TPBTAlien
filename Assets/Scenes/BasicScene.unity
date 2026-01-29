@@ -282,6 +282,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c28944eb23caf104ead0313c4e2a37fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  _blackboard:
+    Target: {fileID: 0}
+    IsPlayerVisible: 0
+    LastKnownPlayerPosition: {x: 0, y: 0, z: 0}
+    TargetFootstep: {fileID: 0}
+    VisitedFootsteps: []
+    ResearchCurrentTarget: {x: 0, y: 0, z: 0}
+    HasResearchTarget: 0
+    IsResearching: 0
+    HasHeardNoise: 0
+    LastHeardNoisePosition: {x: 0, y: 0, z: 0}
+    HasInvestigatedNoise: 0
   _chaseSpeed: 5
   _patrolSpeed: 4
   _patrolPoints:
@@ -777,6 +789,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db7f276ee9521f4eb79d2580e9df1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySensor
+  Blackboard:
+    Target: {fileID: 0}
+    IsPlayerVisible: 0
+    LastKnownPlayerPosition: {x: 0, y: 0, z: 0}
+    TargetFootstep: {fileID: 0}
+    VisitedFootsteps: []
+    ResearchCurrentTarget: {x: 0, y: 0, z: 0}
+    HasResearchTarget: 0
+    IsResearching: 0
+    HasHeardNoise: 0
+    LastHeardNoisePosition: {x: 0, y: 0, z: 0}
+    HasInvestigatedNoise: 0
   _visionDistance: 10
   _visionAngle: 120
   _obstacleMask:
@@ -843,6 +867,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f240b981f06940aba677657cbe16fa75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHearing
+  Blackboard:
+    Target: {fileID: 0}
+    IsPlayerVisible: 0
+    LastKnownPlayerPosition: {x: 0, y: 0, z: 0}
+    TargetFootstep: {fileID: 0}
+    VisitedFootsteps: []
+    ResearchCurrentTarget: {x: 0, y: 0, z: 0}
+    HasResearchTarget: 0
+    IsResearching: 0
+    HasHeardNoise: 0
+    LastHeardNoisePosition: {x: 0, y: 0, z: 0}
+    HasInvestigatedNoise: 0
   _hearingRange: 15
 --- !u!1001 &594125532
 PrefabInstance:
@@ -855,6 +891,10 @@ PrefabInstance:
     - target: {fileID: 7817466712564866651, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_Name
       value: Cube (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817466712564866651, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2138,6 +2178,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7817466712564866651, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.071262
@@ -2636,9 +2680,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube
       objectReference: {fileID: 0}
+    - target: {fileID: 7817466712564866651, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.96
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2646,7 +2694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.7
+      value: 20.2
       objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2695,6 +2743,10 @@ PrefabInstance:
     - target: {fileID: 7817466712564866651, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_Name
       value: Cube (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817466712564866651, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9020808276982608506, guid: 0e14e37c6fcf2564f98ba764440e1246, type: 3}
       propertyPath: m_LocalPosition.x

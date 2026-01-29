@@ -1,4 +1,7 @@
-﻿namespace Enemies
+﻿using BehaviorTree;
+using Enemies.Components;
+
+namespace Enemies.Nodes
 {
     public class DetectNoise : NodeLeaf
     {
